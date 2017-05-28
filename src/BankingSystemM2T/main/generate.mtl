@@ -1,0 +1,32 @@
+[comment encoding = UTF-8 /]
+[module generate('http://www.eclipse.org/emf/2002/Ecore')]
+
+
+[template public generateElement(anEClass : EClass) { anEClassName: String = anEClass.name.toUpperFirst(); }]
+[comment @main/]
+
+[file (anEClassName.concat('.java'), false, 'UTF-8')]
+	[if (anEClass.abstract)]
+		public abstract class [anEClassName/]{
+	[else]
+		public class [anEClassName/]{
+	[/if]
+		
+		[for (a:EAttribute | anEClass.eAllAttributes) separator('\n')]
+			private [a.eAttributeType.name/] [a.name/];
+		[/for]
+	
+		[for (a:EAttribute | anEClass.eAllAttributes) separator('\n')]
+			public [a.eAttributeType.name/] get [a.name.toUpperFirst()/](){
+				return this.[a.name/];
+			}
+		[/for]
+	
+		[for (o:EOperation | anEClass.eOperations) separator ('\n')]
+			public [o.eType.name/] get [o.name/](){
+				// TODO should be implemented
+			}
+		[/for]
+	}
+[/file]
+[/template]
